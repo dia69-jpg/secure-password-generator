@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Password Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Ambient background grid -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <main class="container">
+    <div class="card" role="main">
+
+      <!-- Header -->
+      <header class="card-header">
+        <div class="header-badge">
+          <span class="lock-icon" aria-hidden="true">⬡</span>
+          <span>Secure</span>
+        </div>
+        <h1 class="card-title">Password<br><em>Generator</em></h1>
+        <p class="card-subtitle">Craft a strong, unique password in seconds.</p>
+      </header>
+
+      <!-- Password Output -->
+      <div class="output-section">
+        <div class="output-wrap">
+          <input
+            type="text"
+            id="passwordOutput"
+            class="password-display"
+            readonly
+            placeholder="Click generate →"
+            aria-label="Generated password"
+          />
+          <button id="copyBtn" class="copy-btn" title="Copy to clipboard" aria-label="Copy password">
+            <svg id="copyIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            <svg id="checkIcon" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Strength bar -->
+        <div class="strength-wrap" aria-live="polite">
+          <span class="strength-label">Strength</span>
+          <div class="strength-bar-track">
+            <div id="strengthBar" class="strength-bar"></div>
+          </div>
+          <span id="strengthText" class="strength-text">—</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Controls -->
+      <div class="controls">
+
+        <!-- Length slider -->
+        <div class="control-group length-group">
+          <div class="control-label-row">
+            <label for="lengthSlider" class="control-label">Length</label>
+            <span id="lengthValue" class="length-badge">16</span>
+          </div>
+          <div class="slider-wrap">
+            <span class="slider-tick">8</span>
+            <input
+              type="range"
+              id="lengthSlider"
+              min="8"
+              max="30"
+              value="16"
+              class="slider"
+              aria-label="Password length"
+            />
+            <span class="slider-tick">30</span>
+          </div>
+        </div>
+
+        <!-- Character set checkboxes -->
+        <div class="control-group">
+          <p class="control-label">Character sets</p>
+          <div class="checkbox-grid">
+
+            <label class="checkbox-item" for="chkUpper">
+              <input type="checkbox" id="chkUpper" checked />
+              <span class="checkbox-box" aria-hidden="true"></span>
+              <span class="checkbox-content">
+                <span class="checkbox-title">Uppercase</span>
+                <span class="checkbox-sample">A B C … Z</span>
+              </span>
+            </label>
+
+            <label class="checkbox-item" for="chkLower">
+              <input type="checkbox" id="chkLower" checked />
+              <span class="checkbox-box" aria-hidden="true"></span>
+              <span class="checkbox-content">
+                <span class="checkbox-title">Lowercase</span>
+                <span class="checkbox-sample">a b c … z</span>
+              </span>
+            </label>
+
+            <label class="checkbox-item" for="chkNumbers">
+              <input type="checkbox" id="chkNumbers" checked />
+              <span class="checkbox-box" aria-hidden="true"></span>
+              <span class="checkbox-content">
+                <span class="checkbox-title">Numbers</span>
+                <span class="checkbox-sample">0 1 2 … 9</span>
+              </span>
+            </label>
+
+            <label class="checkbox-item" for="chkSymbols">
+              <input type="checkbox" id="chkSymbols" />
+              <span class="checkbox-box" aria-hidden="true"></span>
+              <span class="checkbox-content">
+                <span class="checkbox-title">Symbols</span>
+                <span class="checkbox-sample">! @ # $ % &</span>
+              </span>
+            </label>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action buttons -->
+      <div class="btn-group">
+        <button id="generateBtn" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+          Generate
+        </button>
+        <button id="copyBtnBottom" class="btn btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          Copy Password
+        </button>
+      </div>
+
+      <!-- Toast notification -->
+      <div id="toast" class="toast" role="status" aria-live="polite">Copied to clipboard!</div>
+
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
